@@ -7,7 +7,7 @@
 #define LEN(a) sizeof(a) / sizeof(a[0])
 
 // Globals
-// Used to determine value of Z-axis based on X-axis and/or Y-axis
+// Used to determine color of Z-axis based on X-axis and/or Y-axis
 unsigned char adjacency[6][4] = {{2,3,4,6},{1,3,5,6},{1,2,4,5},{1,3,5,6},{2,3,4,6},{1,2,4,5}};
 // Solved cube
 unsigned char goalState[20] = {70,7,134,68,132,69,5,133,67,131,65,129,86,23,150,84,148,85,21,149};
@@ -47,34 +47,21 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < tilesCount; i++) {
         if (tiles[i] == 'R') {
             colors[0] += 1;
-            if (colors[0] > 9) {
-                returnFalse();
-            }
         } else if (tiles[i] == 'Y') {
             colors[1] += 1;
-            if (colors[1] > 9) {
-                returnFalse();
-            }
         } else if (tiles[i] == 'B') {
             colors[2] += 1;
-            if (colors[2] > 9) {
-                returnFalse();
-            }
         } else if (tiles[i] == 'O') {
             colors[3] += 1;
-            if (colors[3] > 9) {
-                returnFalse();
-            }
         } else if (tiles[i] == 'W') {
             colors[4] += 1;
-            if (colors[4] > 9) {
-                returnFalse();
-            }
         } else if (tiles[i] == 'G') {
             colors[5] += 1;
-            if (colors[5] > 9) {
-                returnFalse();
-            }
+        }
+    }
+    for (int i= 0; i < LEN(colors); i++) {
+        if (colors[i] != 9) {
+            returnFalse();
         }
     }
 
