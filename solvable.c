@@ -4,18 +4,9 @@
 #include <stdbool.h>
 #include "solvable.h"
 
-// Bit values of colors
-unsigned char none = 0;
-unsigned char red = 1;
-unsigned char green = 2;
-unsigned char yellow = 3;
-unsigned char blue = 4;
-unsigned char orange = 5;
-unsigned char white = 6;
-
-// Used to determine value of Z-axis
+// Globals
+// Used to determine value of Z-axis based on X-axis and/or Y-axis
 unsigned char adjacency[6][4] = {{2,3,4,6},{1,3,5,6},{1,2,4,5},{1,3,5,6},{2,3,4,6},{1,2,4,5}};
-
 // Solved cube
 unsigned char goalState[20] = {70,7,134,68,132,69,5,133,67,131,65,129,86,23,150,84,148,85,21,149};
 
@@ -152,19 +143,19 @@ void returnTrue() {
 // Function to determine color of tile
 unsigned char tileColor(char t) {
     if (t == 'R') {
-        return red;
+        return (unsigned char) 1;
     } else if (t == 'G') {
-        return green;
+        return (unsigned char) 2;
     } else if (t == 'Y') {
-        return yellow;
+        return (unsigned char) 3;
     } else if (t == 'B') {
-        return blue;
+        return (unsigned char) 4;
     } else if (t == 'O') {
-        return orange;
+        return (unsigned char) 5;
     } else if (t == 'W') {
-        return white;
+        return (unsigned char) 6;
     } else {
-        return none;
+        return (unsigned char) 0;
     }
 }
 
