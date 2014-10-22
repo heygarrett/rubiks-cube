@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include "solvable.h"
 
+#define LEN(a) sizeof(a) / sizeof(a[0])
+
 // Globals
 // Used to determine value of Z-axis based on X-axis and/or Y-axis
 unsigned char adjacency[6][4] = {{2,3,4,6},{1,3,5,6},{1,2,4,5},{1,3,5,6},{2,3,4,6},{1,2,4,5}};
@@ -76,13 +78,13 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    int cubieTileMatches[20][3] = {
+    int cubieTiles[20][3] = {
         // 1
-        {9, 0, 52},
+        {9, 0, 51},
         // 2
-        {-1, 1, 53},
+        {-1, 1, 52},
         // 3
-        {17, 2, 54},
+        {17, 2, 53},
         // 4
         {10, 3, -1},
         // 5
@@ -120,12 +122,9 @@ int main(int argc, char *argv[]) {
     };
 
     unsigned char inputCube[20];
-    for (int i = 0; i < sizeof(cubieTileMatches)/sizeof(cubieTileMatches[0]); i++) {
-        inputCube[i] = generateCube(tiles, cubieTileMatches[i][0], cubieTileMatches[i][1], cubieTileMatches[i][2]);
+    for (int i = 0; i < LEN(cubieTiles); i++) {
+        inputCube[i] = generateCube(tiles, cubieTiles[i][0], cubieTiles[i][1], cubieTiles[i][2]);
     }
-
-    printf("Size of goal state: %lu\n", sizeof(goalState));
-    printf("Size of input cube: %lu\n", sizeof(inputCube));
 }
 
 // Function for exiting upon discovery of invalid cube
@@ -164,7 +163,7 @@ unsigned char z2TileColor(unsigned char x, unsigned char y, unsigned char z) {
     int possibleUsed = 0;
     int i = 0;
     int j = 0;
-    int length = sizeof(adjacency[0]) / sizeof(adjacency[0][0]);
+    int length = LEN(adjacency[0]);
     while (i < length && j < length) {
         if (adjacency[x-1][i] == adjacency[y-1][j]) {
             possible[possibleUsed] = adjacency[x-1][i];
@@ -185,7 +184,7 @@ unsigned char z2TileColor(unsigned char x, unsigned char y, unsigned char z) {
 }
 
 unsigned char z4TileColor(unsigned char other, unsigned char z) {
-    for (unsigned char i = 0; i < sizeof(adjacency[0])/sizeof(adjacency[0][0]); i++) {
+    for (unsigned char i = 0; i < LEN(adjacency[0]); i++) {
         if (adjacency[other-1][i] == z) {
             return i;
         }
@@ -194,29 +193,14 @@ unsigned char z4TileColor(unsigned char other, unsigned char z) {
 }
 
 unsigned char generateCube(char tiles[], int x, int y, int z) {
-
-    unsigned char x_color = 0;
-    unsigned char y_color = 0;
-    unsigned char z_color = 0;
-
+    unsigned char x_color = tileColor(tiles[x]);
+    unsigned char y_color = tileColor(tiles[y]);
+    unsigned char z_color = tileColor(tiles[z]);
     if (x == -1) {
-        x_color = 0;
-        y_color = tileColor(tiles[y]);
-        z_color = tileColor(tiles[z]);
         z_color = z4TileColor(y_color, z_color);
     } else if (y == -1) {
-        x_color = tileColor(tiles[x]);
-        y_color = 0;
-        z_color = tileColor(tiles[z]);
         z_color = z4TileColor(x_color, z_color);
-    } else if (z == -1) {
-        x_color = tileColor(tiles[x]);
-        y_color = tileColor(tiles[y]);
-        z_color = 0;
-    } else {
-        x_color = tileColor(tiles[x]);
-        y_color = tileColor(tiles[y]);
-        z_color = tileColor(tiles[z]);
+    } else if (z_color != 0) {
         z_color = z2TileColor(x_color, y_color, z_color);
     }
     return (x_color << 5) + (y_color << 2) + z_color;
