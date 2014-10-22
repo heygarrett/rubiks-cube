@@ -113,17 +113,15 @@ int main(int argc, char *argv[]) {
         inputCube[i] = generateCube(tiles, cubieTiles[i][0], cubieTiles[i][1], cubieTiles[i][2]);
     }
 
-    // // Check for permutation parity
-    // int permParity = 0;
-    // int j;
-    // for (int i = 0; LEN(inputCube); i++) {
-    //     for (j = i + 1; j < LEN(inputCube); j++) {
-    //         permParity += checkInversion(inputCube[i], inputCube[j]);
-    //     }
-    // }
-    // if (permParity % 2 != 0) {
-    //     returnFalse();
-    // }
+    int permCube[20];
+    for (int i = 0; i < LEN(inputCube); i++) {
+        for (int j = 0; j < LEN(goalState); j++) {
+            if (goalState[j] == calcGoalValue(inputCube[i])) {
+                    permCube[i] = j;
+            }
+        }
+        printf("%d\n", permCube[i]);
+    }
 }
 
 // Function for exiting upon discovery of invalid cube
@@ -205,22 +203,38 @@ unsigned char generateCube(char tiles[], int x, int y, int z) {
     return (x_color << 5) + (y_color << 2) + z_color;
 }
 
-// int checkInversion(unsigned char currentCubie, unsigned char aftCubie) {
-//     
-// }
-
 unsigned char calcGoalValue(unsigned char cubie) {
-    unsigned char colors[3] = {cubie >> 5, cubie << 3 >> 5, cubie << 6 >> 6};
+    unsigned char colors[3] = {cubie >> 5, cubie << 3, cubie << 6};
+    colors[1] = colors[1] >> 5;
+    colors[2] = colors[2] >> 6;
     unsigned char x_color;
     unsigned char y_color;
     unsigned char z_color;
 
+    // Find third color
     if (colors[0] == 0) {
         colors[2] = adjacency[colors[1] - 1][colors[2]];
-    } else if (y_color == 0) {
+    } else if (colors[1] == 0) {
         colors[2] = adjacency[colors[0] - 1][colors[2]];
+    } else if (colors[2] != 0) {
+        int count = 0;
+        unsigned char common[2];
+        for (int i = 0; i < LEN(adjacency[0]); i++) {
+            for (int j = 0; j < LEN(adjacency[0]); j++) {
+                if (adjacency[colors[0] - 1][i] == adjacency[colors[1] - 1][j]) {
+                    common[count] = adjacency[colors[0] - 1][i];
+                    count++;
+                }
+            }
+        }
+        if (colors[2] == 1) {
+            colors[2] = common[0];
+        } else {
+            colors[2] = common[1];
+        }
     }
 
+    // Rearrange colors to goal state orientation
     for (int i = 0; i < LEN(colors); i++) {
         if (colors[i] == 2 || colors[i] == 4) {
             x_color = colors[i];
@@ -231,7 +245,12 @@ unsigned char calcGoalValue(unsigned char cubie) {
         }
     }
 
-    if (z_color != 0) {
+    // Calculate z-axis value
+    if (x_color == 0) {
+        z_color = z4TileColor(y_color, z_color);
+    } else if (y_color == 0) {
+        z_color = z4TileColor(x_color, z_color);
+    } else if (z_color != 0) {
         z_color = z2TileColor(x_color, y_color, z_color);
     }
 
