@@ -112,6 +112,18 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < LEN(cubieTiles); i++) {
         inputCube[i] = generateCube(tiles, cubieTiles[i][0], cubieTiles[i][1], cubieTiles[i][2]);
     }
+
+    // // Check for permutation parity
+    // int permParity = 0;
+    // int j;
+    // for (int i = 0; LEN(inputCube); i++) {
+    //     for (j = i + 1; j < LEN(inputCube); j++) {
+    //         permParity += checkInversion(inputCube[i], inputCube[j]);
+    //     }
+    // }
+    // if (permParity % 2 != 0) {
+    //     returnFalse();
+    // }
 }
 
 // Function for exiting upon discovery of invalid cube
@@ -190,5 +202,38 @@ unsigned char generateCube(char tiles[], int x, int y, int z) {
     } else if (z_color != 0) {
         z_color = z2TileColor(x_color, y_color, z_color);
     }
+    return (x_color << 5) + (y_color << 2) + z_color;
+}
+
+// int checkInversion(unsigned char currentCubie, unsigned char aftCubie) {
+//     
+// }
+
+unsigned char calcGoalValue(unsigned char cubie) {
+    unsigned char colors[3] = {cubie >> 5, cubie << 3 >> 5, cubie << 6 >> 6};
+    unsigned char x_color;
+    unsigned char y_color;
+    unsigned char z_color;
+
+    if (colors[0] == 0) {
+        colors[2] = adjacency[colors[1] - 1][colors[2]];
+    } else if (y_color == 0) {
+        colors[2] = adjacency[colors[0] - 1][colors[2]];
+    }
+
+    for (int i = 0; i < LEN(colors); i++) {
+        if (colors[i] == 2 || colors[i] == 4) {
+            x_color = colors[i];
+        } else if (colors[i] == 1 || colors[i] == 5) {
+            y_color = colors[i];
+        } else if (colors[i] == 3 || colors[i] == 6) {
+            z_color = colors[i];
+        }
+    }
+
+    if (z_color != 0) {
+        z_color = z2TileColor(x_color, y_color, z_color);
+    }
+
     return (x_color << 5) + (y_color << 2) + z_color;
 }
