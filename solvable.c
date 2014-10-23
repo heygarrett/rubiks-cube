@@ -122,6 +122,13 @@ int main(int argc, char *argv[]) {
         }
         printf("%d\n", permCube[i]);
     }
+    int i;
+    int j;
+    for (i = 0; i < LEN(permCube); i++) {
+        for (j = i; j < LEN(permCube) - i + 1; j++) {
+            // check inversions
+        }
+    }
 }
 
 // Function for exiting upon discovery of invalid cube
