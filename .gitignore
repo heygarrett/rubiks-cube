@@ -31,3 +31,5 @@ solvable
 
 # Input files
 *.txt
+
+*.dSYM

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "solvable.h"
 
-#define LEN(a) sizeof(a) / sizeof(a[0])
+#define LEN(a) (sizeof(a)) / (sizeof(a[0]))
 
 // Globals
 // Used to determine color of Z-axis based on X-axis and/or Y-axis
@@ -65,70 +65,84 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Map of tiles to cubie
     int cubieTiles[20][3] = {
         // 1
         {9, 0, 51},
         // 2
-        {-1, 1, 52},
+        {54, 1, 52},
         // 3
         {17, 2, 53},
         // 4
-        {10, 3, -1},
+        {10, 3, 54},
         // 5
-        {16, 5, -1},
+        {16, 5, 54},
         // 6
         {11, 6, 12},
         // 7
-        {-1, 7, 13},
+        {54, 7, 13},
         // 8
         {15, 8, 14},
         // 9
-        {18, -1, 48},
+        {18, 54, 48},
         // 10
-        {26, -1, 50},
+        {26, 54, 50},
         // 11
-        {20, -1, 21},
+        {20, 54, 21},
         // 12
-        {24, -1, 23},
+        {24, 54, 23},
         // 13
         {27, 42, 45},
         // 14
-        {-1, 43, 46},
+        {54, 43, 46},
         // 15
         {35, 44, 47},
         // 16
-        {28, 39, -1},
+        {28, 39, 54},
         // 17 
-        {34, 41, -1},
+        {34, 41, 54},
         // 18
         {29, 36, 30},
         // 19
-        {-1, 37, 31},
+        {54, 37, 31},
         // 20
         {33, 38, 32}
     };
 
+    // Store cube
     unsigned char inputCube[20];
     for (int i = 0; i < LEN(cubieTiles); i++) {
         inputCube[i] = generateCube(tiles, cubieTiles[i][0], cubieTiles[i][1], cubieTiles[i][2]);
     }
 
+    // Create array of indices for permutation parity test
     int permCube[20];
-    for (int i = 0; i < LEN(inputCube); i++) {
+    unsigned char inputGoal;
+    for (int i = 0; i < LEN(permCube); i++) {
+        inputGoal = calcGoalValue(inputCube[i]);
         for (int j = 0; j < LEN(goalState); j++) {
-            if (goalState[j] == calcGoalValue(inputCube[i])) {
-                    permCube[i] = j;
+            if (inputGoal == goalState[j]) {
+                permCube[i] = j;
+                break;
             }
         }
-        printf("%d\n", permCube[i]);
     }
-    int i;
-    int j;
-    for (i = 0; i < LEN(permCube); i++) {
-        for (j = i; j < LEN(permCube) - i + 1; j++) {
-            // check inversions
+
+    // Count inversions in the array of indices
+    int totalInversions = 0;
+    for (int i = 0; i < LEN(permCube) - 1; i++) {
+        for (int j = i + 1; j < LEN(permCube); j++) {
+            if (permCube[i] > permCube[j]) {
+                totalInversions++;
+            }
         }
     }
+    // Return false if odd number of inversions
+    if (totalInversions % 2 != 0) {
+        returnFalse();
+    }
+
+    return 0;
 }
 
 // Function for exiting upon discovery of invalid cube
@@ -200,9 +214,9 @@ unsigned char generateCube(char tiles[], int x, int y, int z) {
     unsigned char x_color = tileColor(tiles[x]);
     unsigned char y_color = tileColor(tiles[y]);
     unsigned char z_color = tileColor(tiles[z]);
-    if (x == -1) {
+    if (x_color == 0) {
         z_color = z4TileColor(y_color, z_color);
-    } else if (y == -1) {
+    } else if (y_color == 0) {
         z_color = z4TileColor(x_color, z_color);
     } else if (z_color != 0) {
         z_color = z2TileColor(x_color, y_color, z_color);
@@ -214,9 +228,9 @@ unsigned char calcGoalValue(unsigned char cubie) {
     unsigned char colors[3] = {cubie >> 5, cubie << 3, cubie << 6};
     colors[1] = colors[1] >> 5;
     colors[2] = colors[2] >> 6;
-    unsigned char x_color;
-    unsigned char y_color;
-    unsigned char z_color;
+    unsigned char x_color = 0;
+    unsigned char y_color = 0;
+    unsigned char z_color = 0;
 
     // Find third color
     if (colors[0] == 0) {
