@@ -146,9 +146,10 @@ int main(int argc, char *argv[]) {
     int cornerCubies[8] = {0,2,5,7,12,14,17,19};
     int totalRotations = 0;
     for (int i = 0; i < 8; i++) {
-        totalRotations += calcRotations(i, cubieTiles[cornerCubies[i]], tiles);
+        totalRotations += calcRotations(cornerCubies[i], cubieTiles[cornerCubies[i]], tiles);
     }
     // Return false if number of rotations not divisible by 3
+    printf("Total rotations: %d\n", totalRotations);
     if (totalRotations % 3 != 0) {
         returnFalse();
     }
@@ -309,19 +310,8 @@ int calcRotations(int index, int corner[], char tiles[]) {
         }
     }
     int rotations = 0;
-    int temp;
-    if (index == 0 || index == 12 || index == 17 || index == 19) {
-        for (int i = 0; i < 3; i++) {
-            if (tiles[x_tile] == 'G' || tiles[x_tile] == 'B') {
-                break;
-            }
-            temp = tiles[corner[2]];
-            tiles[corner[2]] = corner[1];
-            tiles[corner[1]] = tiles[corner[0]];
-            tiles[corner[0]] = temp;
-            rotations++;
-        }
-    } else {
+    char temp;
+    if (index == 0 || index == 7 || index == 14 || index == 17) {
         for (int i = 0; i < 3; i++) {
             if (tiles[x_tile] == 'G' || tiles[x_tile] == 'B') {
                 break;
@@ -330,6 +320,17 @@ int calcRotations(int index, int corner[], char tiles[]) {
             tiles[corner[0]] = tiles[corner[1]];
             tiles[corner[1]] = tiles[corner[2]];
             tiles[corner[2]] = temp;
+            rotations++;
+        }
+    } else {
+        for (int i = 0; i < 3; i++) {
+            if (tiles[x_tile] == 'G' || tiles[x_tile] == 'B') {
+                break;
+            }
+            temp = tiles[corner[2]];
+            tiles[corner[2]] = tiles[corner[1]];
+            tiles[corner[1]] = tiles[corner[0]];
+            tiles[corner[0]] = temp;
             rotations++;
         }
     }
