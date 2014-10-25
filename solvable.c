@@ -142,15 +142,24 @@ int main(int argc, char *argv[]) {
         returnFalse();
     }
 
+    // Count rotations of corner cubies
     int cornerCubies[8] = {0,2,5,7,12,14,17,19};
     int totalRotations = 0;
-    for (int i = 0; i < 8; i ++) {
-        totalRotations+= calcRotations(i, cubieTiles[cornerCubies[i]], tiles);
+    for (int i = 0; i < 8; i++) {
+        totalRotations += calcRotations(i, cubieTiles[cornerCubies[i]], tiles);
     }
-    printf("Total rotations: %d\n", totalRotations);
+    // Return false if number of rotations not divisible by 3
     if (totalRotations % 3 != 0) {
         returnFalse();
     }
+
+    // Count the number of incorrectly oriented edge cubies
+    int edgeCubies[12] = {1,3,4,6,8,9,10,11,13,15,16,18};
+    int incorrectOrientations;
+    for (int i = 0; i < 12; i++) {
+        incorrectOrientations += findIncorrectEdges(i, cubieTiles[edgeCubies[i]], tiles);
+    }
+
 
     return 0;
 }
@@ -323,4 +332,62 @@ int calcRotations(int index, int corner[], char tiles[]) {
     }
         
     return rotations;
+}
+
+int findIncorrectEdges(int index, int edge[], char tiles[]) {
+    int incorrect = 0;
+    int x_tile = 54;
+    int y_tile;
+    char y_color;
+    int z_tile;
+    char z_color;
+    for (int i = 0; i < 3; i++) {
+        if (tiles[edge[i]] == 'G' || tiles[edge[i]] == 'B') {
+            x_tile = edge[i];
+            break;
+        } else if (tiles[edge[i]] == 'R') {
+            y_tile = edge[i];
+            y_color = 'R';
+            break;
+        } else if (tiles[edge[i]] == 'O') {
+            y_tile = edge[i];
+            y_color = 'O';
+            break;
+        } else if (tiles[edge[i]] == 'Y') {
+            z_tile = edge[i];
+            z_color = 'Y';
+            break;
+        } else if (tiles[edge[i]] == 'W') {
+            z_tile = edge[i];
+            z_color = 'W';
+            break;
+        }
+    }
+
+    if (x_tile != 54) {
+        if (!((x_tile >= 9 && x_tile <= 17) || (x_tile >= 27 && x_tile <= 35) || (x_tile >= 45 && x_tile <= 47) || (x_tile >= 51 && x_tile <= 53))) {
+            incorrect = 1;
+        }
+    } else if (!((z_tile >= 9 && z_tile <= 11) || (z_tile >= 15 && z_tile <= 20) || (z_tile >= 24 && z_tile <= 29) || (z_tile >= 33 && z_tile <= 35))) {
+        if (y_color == 'R') {
+            if (!(y_tile >= 0 && y_tile <= 8)) {
+                incorrect = 1;
+            }
+        } else if (y_color == 'O') {
+            if (!(y_tile >= 36 && y_tile <= 44)) {
+                incorrect = 1;
+            }
+        } else if (z_color == 'Y') {
+            if (!((z_tile >= 12 && z_tile <= 14) || (z_tile >= 21 && z_tile <= 23) || (z_tile >= 30 && z_tile <= 32))) {
+                incorrect = 1;
+            }
+        } else if (z_color == 'W') {
+            if (!(z_tile >= 45 && z_tile <= 53)) {
+                incorrect = 1;
+            }
+        }
+    }
+
+    return incorrect;
+
 }
