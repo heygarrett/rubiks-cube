@@ -160,6 +160,9 @@ int main(int argc, char *argv[]) {
         incorrectOrientations += findIncorrectEdges(i, cubieTiles[edgeCubies[i]], tiles);
     }
 
+    if (incorrectOrientations % 2 != 0) {
+        returnFalse();
+    }
 
     return 0;
 }
