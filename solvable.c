@@ -149,7 +149,6 @@ int main(int argc, char *argv[]) {
         totalRotations += calcRotations(cornerCubies[i], cubieTiles[cornerCubies[i]], tiles);
     }
     // Return false if number of rotations not divisible by 3
-    printf("Total rotations: %d\n", totalRotations);
     if (totalRotations % 3 != 0) {
         returnFalse();
     }
@@ -158,25 +157,20 @@ int main(int argc, char *argv[]) {
     int edgeCubies[12] = {1,3,4,6,8,9,10,11,13,15,16,18};
     int incorrectOrientations;
     for (int i = 0; i < 12; i++) {
-        incorrectOrientations += findIncorrectEdges(i, cubieTiles[edgeCubies[i]], tiles);
+        incorrectOrientations += calcOrientation(edgeCubies[i], cubieTiles[edgeCubies[i]], tiles);
     }
 
     if (incorrectOrientations % 2 != 0) {
         returnFalse();
     }
 
+    printf("true\n");
     return 0;
 }
 
 // Function for exiting upon discovery of invalid cube
 void returnFalse() {
     printf("false\n");
-    exit(0);
-}
-
-// Function for exiting upon proof of valid cube
-void returnTrue() {
-    printf("true\n");
     exit(0);
 }
 
@@ -338,60 +332,32 @@ int calcRotations(int index, int corner[], char tiles[]) {
     return rotations;
 }
 
-int findIncorrectEdges(int index, int edge[], char tiles[]) {
-    int incorrect = 0;
+int calcOrientation(int index, int edge[], char tiles[]) {
     int x_tile = 54;
-    int y_tile;
-    char y_color;
-    int z_tile;
-    char z_color;
+    int y_tile = 54;
+    int z_tile = 54;
     for (int i = 0; i < 3; i++) {
         if (tiles[edge[i]] == 'G' || tiles[edge[i]] == 'B') {
             x_tile = edge[i];
-            break;
-        } else if (tiles[edge[i]] == 'R') {
+            continue;
+        } else if (tiles[edge[i]] == 'R' || tiles[edge[i]] == 'O') {
             y_tile = edge[i];
-            y_color = 'R';
-            break;
-        } else if (tiles[edge[i]] == 'O') {
-            y_tile = edge[i];
-            y_color = 'O';
-            break;
-        } else if (tiles[edge[i]] == 'Y') {
+            continue;
+        } else if (tiles[edge[i]] == 'Y' || tiles[edge[i]] == 'W') {
             z_tile = edge[i];
-            z_color = 'Y';
-            break;
-        } else if (tiles[edge[i]] == 'W') {
-            z_tile = edge[i];
-            z_color = 'W';
-            break;
+            continue;
         }
     }
 
     if (x_tile != 54) {
-        if (!((x_tile >= 9 && x_tile <= 17) || (x_tile >= 27 && x_tile <= 35) || (x_tile >= 45 && x_tile <= 47) || (x_tile >= 51 && x_tile <= 53))) {
-            incorrect = 1;
+        if ((x_tile >= 0 && x_tile <= 8) || (x_tile >= 36 && x_tile <= 44) || (x_tile >= 21 && x_tile <= 23) || (x_tile >= 48 && x_tile <= 50)) {
+            return 1;
         }
-    } else if (!((z_tile >= 9 && z_tile <= 11) || (z_tile >= 15 && z_tile <= 20) || (z_tile >= 24 && z_tile <= 29) || (z_tile >= 33 && z_tile <= 35))) {
-        if (y_color == 'R') {
-            if (!(y_tile >= 0 && y_tile <= 8)) {
-                incorrect = 1;
-            }
-        } else if (y_color == 'O') {
-            if (!(y_tile >= 36 && y_tile <= 44)) {
-                incorrect = 1;
-            }
-        } else if (z_color == 'Y') {
-            if (!((z_tile >= 12 && z_tile <= 14) || (z_tile >= 21 && z_tile <= 23) || (z_tile >= 30 && z_tile <= 32))) {
-                incorrect = 1;
-            }
-        } else if (z_color == 'W') {
-            if (!(z_tile >= 45 && z_tile <= 53)) {
-                incorrect = 1;
-            }
+    } else if (!((y_tile >= 0 && y_tile <= 8) || (y_tile >= 36 && y_tile <= 44))) {
+        if (!((z_tile >= 9 && z_tile <= 11) || (z_tile >= 15 && z_tile <= 20) || (z_tile >= 24 && z_tile <= 29) || (z_tile >= 33 && z_tile <= 35))) {
+            return 1;
         }
     }
 
-    return incorrect;
-
+    return 0;
 }
