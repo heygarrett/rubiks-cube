@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "turns.h"
+#include "valid.h"
 
 void turnRed(unsigned char *cube) {
     int temp = cube[0];
@@ -81,6 +82,11 @@ void turnWhite(unsigned char *cube) {
     cube[8] = temp;
 }
 
-// unsigned char switchColors(unsigned char cubie) {
-// 
-// }
+unsigned char switchColors(unsigned char cubie, int first, int second) {
+    unsigned char colors[3];
+    getCubieColors(cubie, colors);
+    unsigned char temp = colors[first];
+    colors[first] = colors[second];
+    colors[second] = temp;
+    return setCubieColors(colors[0], colors[1], colors[2]);
+}

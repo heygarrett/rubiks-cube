@@ -100,7 +100,7 @@ void validate(FILE *input, unsigned char *inputCube) {
     // Store cube
     // unsigned char inputCube[20];
     for (unsigned long i = 0; i < LEN(cubieTiles); i++) {
-        inputCube[i] = generateCube(tiles, cubieTiles[i][0], cubieTiles[i][1], cubieTiles[i][2]);
+        inputCube[i] = setCubieColors(tileColor(tiles[cubieTiles[i][0]]), tileColor(tiles[cubieTiles[i][1]]), tileColor(tiles[cubieTiles[i][2]]));
     }
 
     // Create array of indices for permutation parity test
@@ -212,27 +212,23 @@ unsigned char z4TileColor(unsigned char other, unsigned char z) {
     return 4;
 }
 
-unsigned char generateCube(char tiles[], int x, int y, int z) {
-    unsigned char x_color = tileColor(tiles[x]);
-    unsigned char y_color = tileColor(tiles[y]);
-    unsigned char z_color = tileColor(tiles[z]);
-    if (x_color == 0) {
-        z_color = z4TileColor(y_color, z_color);
-    } else if (y_color == 0) {
-        z_color = z4TileColor(x_color, z_color);
-    } else if (z_color != 0) {
-        z_color = z2TileColor(x_color, y_color, z_color);
+unsigned char setCubieColors(unsigned char x, unsigned char y, unsigned char z) {
+    if (x == 0) {
+        z = z4TileColor(y, z);
+    } else if (y == 0) {
+        z = z4TileColor(x, z);
+    } else if (z != 0) {
+        z = z2TileColor(x, y, z);
     }
-    return (x_color << 5) + (y_color << 2) + z_color;
+    return (x << 5) + (y << 2) + z;
 }
 
-unsigned char calcGoalValue(unsigned char cubie) {
-    unsigned char colors[3] = {cubie >> 5, cubie << 3, cubie << 6};
+void getCubieColors(unsigned char cubie, unsigned char *colors) {
+    colors[0] = cubie >> 5; 
+    colors[1] = cubie << 3;
     colors[1] = colors[1] >> 5;
+    colors[2] =  cubie << 6;
     colors[2] = colors[2] >> 6;
-    unsigned char x_color = 0;
-    unsigned char y_color = 0;
-    unsigned char z_color = 0;
 
     // Find third color
     if (colors[0] == 0) {
@@ -256,6 +252,15 @@ unsigned char calcGoalValue(unsigned char cubie) {
             colors[2] = common[1];
         }
     }
+}
+
+unsigned char calcGoalValue(unsigned char cubie) {
+    unsigned char x_color = 0;
+    unsigned char y_color = 0;
+    unsigned char z_color = 0;
+
+    unsigned char colors[3];
+    getCubieColors(cubie, colors);
 
     // Rearrange colors to goal state orientation
     for (unsigned long i = 0; i < LEN(colors); i++) {
