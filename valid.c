@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "solvable.h"
+#include "valid.h"
 
 #define LEN(a) (sizeof(a)) / (sizeof(a[0]))
 
@@ -12,19 +12,8 @@ unsigned char adjacency[6][4] = {{2,3,4,6},{1,3,5,6},{1,2,4,5},{1,3,5,6},{2,3,4,
 // Solved cube
 unsigned char goalState[20] = {70,7,134,68,132,69,5,133,67,131,65,129,86,23,150,84,148,85,21,149};
 
-int main(int argc, char *argv[]) {
+void validate(FILE *input, unsigned char *inputCube) {
 
-    // Check for a passed file
-    if (argc != 2) {
-        returnFalse();
-    } 
-
-    // Read file in
-    FILE *input = fopen(argv[1], "r");
-    // Make sure the file can be opened
-    if (input == 0) {
-        returnFalse();
-    }
     // Save the orientation of the cube from the file to a string
     int t;
     int tilesCount = 0;
@@ -59,12 +48,11 @@ int main(int argc, char *argv[]) {
             colors[5] += 1;
         }
     }
-    for (int i= 0; i < LEN(colors); i++) {
+    for (unsigned long i = 0; i < LEN(colors); i++) {
         if (colors[i] != 9) {
             returnFalse();
         }
     }
-
     // Map of tiles to cubie
     int cubieTiles[20][3] = {
         // 1
@@ -110,17 +98,17 @@ int main(int argc, char *argv[]) {
     };
 
     // Store cube
-    unsigned char inputCube[20];
-    for (int i = 0; i < LEN(cubieTiles); i++) {
+    // unsigned char inputCube[20];
+    for (unsigned long i = 0; i < LEN(cubieTiles); i++) {
         inputCube[i] = generateCube(tiles, cubieTiles[i][0], cubieTiles[i][1], cubieTiles[i][2]);
     }
 
     // Create array of indices for permutation parity test
     int permCube[20];
     unsigned char inputGoal;
-    for (int i = 0; i < LEN(permCube); i++) {
+    for (unsigned long i = 0; i < LEN(permCube); i++) {
         inputGoal = calcGoalValue(inputCube[i]);
-        for (int j = 0; j < LEN(goalState); j++) {
+        for (unsigned long j = 0; j < LEN(goalState); j++) {
             if (inputGoal == goalState[j]) {
                 permCube[i] = j;
                 break;
@@ -130,8 +118,8 @@ int main(int argc, char *argv[]) {
 
     // Count inversions in the array of indices
     int totalInversions = 0;
-    for (int i = 0; i < LEN(permCube) - 1; i++) {
-        for (int j = i + 1; j < LEN(permCube); j++) {
+    for (unsigned long i = 0; i < LEN(permCube) - 1; i++) {
+        for (unsigned long j = i + 1; j < LEN(permCube); j++) {
             if (permCube[i] > permCube[j]) {
                 totalInversions++;
             }
@@ -155,17 +143,14 @@ int main(int argc, char *argv[]) {
 
     // Count the number of incorrectly oriented edge cubies
     int edgeCubies[12] = {1,3,4,6,8,9,10,11,13,15,16,18};
-    int incorrectOrientations;
+    int incorrectOrientations = 0;
     for (int i = 0; i < 12; i++) {
-        incorrectOrientations += calcOrientation(edgeCubies[i], cubieTiles[edgeCubies[i]], tiles);
+        incorrectOrientations += calcOrientation(cubieTiles[edgeCubies[i]], tiles);
     }
 
     if (incorrectOrientations % 2 != 0) {
         returnFalse();
     }
-
-    printf("true\n");
-    return 0;
 }
 
 // Function for exiting upon discovery of invalid cube
@@ -219,7 +204,7 @@ unsigned char z2TileColor(unsigned char x, unsigned char y, unsigned char z) {
 }
 
 unsigned char z4TileColor(unsigned char other, unsigned char z) {
-    for (unsigned char i = 0; i < LEN(adjacency[0]); i++) {
+    for (unsigned long i = 0; i < LEN(adjacency[0]); i++) {
         if (adjacency[other-1][i] == z) {
             return i;
         }
@@ -257,8 +242,8 @@ unsigned char calcGoalValue(unsigned char cubie) {
     } else if (colors[2] != 0) {
         int count = 0;
         unsigned char common[2];
-        for (int i = 0; i < LEN(adjacency[0]); i++) {
-            for (int j = 0; j < LEN(adjacency[0]); j++) {
+        for (unsigned long i = 0; i < LEN(adjacency[0]); i++) {
+            for (unsigned long j = 0; j < LEN(adjacency[0]); j++) {
                 if (adjacency[colors[0] - 1][i] == adjacency[colors[1] - 1][j]) {
                     common[count] = adjacency[colors[0] - 1][i];
                     count++;
@@ -273,7 +258,7 @@ unsigned char calcGoalValue(unsigned char cubie) {
     }
 
     // Rearrange colors to goal state orientation
-    for (int i = 0; i < LEN(colors); i++) {
+    for (unsigned long i = 0; i < LEN(colors); i++) {
         if (colors[i] == 2 || colors[i] == 4) {
             x_color = colors[i];
         } else if (colors[i] == 1 || colors[i] == 5) {
@@ -332,7 +317,7 @@ int calcRotations(int index, int corner[], char tiles[]) {
     return rotations;
 }
 
-int calcOrientation(int index, int edge[], char tiles[]) {
+int calcOrientation(int edge[], char tiles[]) {
     int x_tile = 54;
     int y_tile = 54;
     int z_tile = 54;
