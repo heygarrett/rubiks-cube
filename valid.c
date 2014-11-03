@@ -12,7 +12,51 @@ unsigned char adjacency[6][4] = {{2,3,4,6},{1,3,5,6},{1,2,4,5},{1,3,5,6},{2,3,4,
 // Solved cube
 unsigned char goalState[20] = {70,7,134,68,132,69,5,133,67,131,65,129,86,23,150,84,148,85,21,149};
 
-void validate(FILE *input, unsigned char *inputCube) {
+// Map of tiles to cubie
+int cubieTiles[20][3] = {
+    // 1
+    {9, 0, 51},
+    // 2
+    {54, 1, 52},
+    // 3
+    {17, 2, 53},
+    // 4
+    {10, 3, 54},
+    // 5
+    {16, 5, 54},
+    // 6
+    {11, 6, 12},
+    // 7
+    {54, 7, 13},
+    // 8
+    {15, 8, 14},
+    // 9
+    {18, 54, 48},
+    // 10
+    {26, 54, 50},
+    // 11
+    {20, 54, 21},
+    // 12
+    {24, 54, 23},
+    // 13
+    {27, 42, 45},
+    // 14
+    {54, 43, 46},
+    // 15
+    {35, 44, 47},
+    // 16
+    {28, 39, 54},
+    // 17 
+    {34, 41, 54},
+    // 18
+    {29, 36, 30},
+    // 19
+    {54, 37, 31},
+    // 20
+    {33, 38, 32}
+};
+
+void generateCube(FILE *input, unsigned char *inputCube) {
 
     // Save the orientation of the cube from the file to a string
     int t;
@@ -33,7 +77,7 @@ void validate(FILE *input, unsigned char *inputCube) {
     }
     // False if there aren't 9 tiles of each color
     int colors[6] = {0, 0, 0, 0, 0, 0};
-    for (int i = 0; i < tilesCount; i++) {
+    for (unsigned long i = 0; i < LEN(tiles); i++) {
         if (tiles[i] == 'R') {
             colors[0] += 1;
         } else if (tiles[i] == 'Y') {
@@ -53,56 +97,16 @@ void validate(FILE *input, unsigned char *inputCube) {
             returnFalse();
         }
     }
-    // Map of tiles to cubie
-    int cubieTiles[20][3] = {
-        // 1
-        {9, 0, 51},
-        // 2
-        {54, 1, 52},
-        // 3
-        {17, 2, 53},
-        // 4
-        {10, 3, 54},
-        // 5
-        {16, 5, 54},
-        // 6
-        {11, 6, 12},
-        // 7
-        {54, 7, 13},
-        // 8
-        {15, 8, 14},
-        // 9
-        {18, 54, 48},
-        // 10
-        {26, 54, 50},
-        // 11
-        {20, 54, 21},
-        // 12
-        {24, 54, 23},
-        // 13
-        {27, 42, 45},
-        // 14
-        {54, 43, 46},
-        // 15
-        {35, 44, 47},
-        // 16
-        {28, 39, 54},
-        // 17 
-        {34, 41, 54},
-        // 18
-        {29, 36, 30},
-        // 19
-        {54, 37, 31},
-        // 20
-        {33, 38, 32}
-    };
 
     // Store cube
-    // unsigned char inputCube[20];
     for (unsigned long i = 0; i < LEN(cubieTiles); i++) {
         inputCube[i] = setCubieColors(tileColor(tiles[cubieTiles[i][0]]), tileColor(tiles[cubieTiles[i][1]]), tileColor(tiles[cubieTiles[i][2]]));
     }
 
+    validate(inputCube);
+}
+
+void validate(unsigned char *inputCube) {
     // Create array of indices for permutation parity test
     int permCube[20];
     unsigned char inputGoal;
@@ -134,7 +138,7 @@ void validate(FILE *input, unsigned char *inputCube) {
     int cornerCubies[8] = {0,2,5,7,12,14,17,19};
     int totalRotations = 0;
     for (int i = 0; i < 8; i++) {
-        totalRotations += calcRotations(cornerCubies[i], cubieTiles[cornerCubies[i]], tiles);
+        totalRotations += calcRotations(cornerCubies[i], inputCube[cornerCubies[i]]);
     }
     // Return false if number of rotations not divisible by 3
     if (totalRotations % 3 != 0) {
@@ -145,10 +149,11 @@ void validate(FILE *input, unsigned char *inputCube) {
     int edgeCubies[12] = {1,3,4,6,8,9,10,11,13,15,16,18};
     int incorrectOrientations = 0;
     for (int i = 0; i < 12; i++) {
-        incorrectOrientations += calcOrientation(cubieTiles[edgeCubies[i]], tiles);
+        incorrectOrientations += calcOrientation(edgeCubies[i], inputCube[edgeCubies[i]]);
     }
 
     if (incorrectOrientations % 2 != 0) {
+        printf("Total incorrect orientations: %d\n", incorrectOrientations);
         returnFalse();
     }
 }
@@ -285,11 +290,14 @@ unsigned char calcGoalValue(unsigned char cubie) {
     return (x_color << 5) + (y_color << 2) + z_color;
 }
 
-int calcRotations(int index, int corner[], char tiles[]) {
+int calcRotations(int index, unsigned char cubie) {
+    unsigned char colors[3];
+    getCubieColors(cubie, colors);
+
     int x_tile;
     for (int i = 0; i < 3; i++) {
-        if ((corner[i] >= 9 && corner[i] <= 17) || (corner[i] >= 27 && corner[i] <= 35)) {
-            x_tile = corner[i];
+        if ((cubieTiles[index][i] >= 9 && cubieTiles[index][i] <= 17) || (cubieTiles[index][i] >= 27 && cubieTiles[index][i] <= 35)) {
+            x_tile = cubieTiles[index][i];
             break;
         }
     }
@@ -297,24 +305,24 @@ int calcRotations(int index, int corner[], char tiles[]) {
     char temp;
     if (index == 0 || index == 7 || index == 14 || index == 17) {
         for (int i = 0; i < 3; i++) {
-            if (tiles[x_tile] == 'G' || tiles[x_tile] == 'B') {
+            if (colors[0] == 2 || colors[0] == 4) {
                 break;
             }
-            temp = tiles[corner[0]];
-            tiles[corner[0]] = tiles[corner[1]];
-            tiles[corner[1]] = tiles[corner[2]];
-            tiles[corner[2]] = temp;
+            temp = colors[0];
+            colors[0] = colors[1];
+            colors[1] = colors[2];
+            colors[2] = temp;
             rotations++;
         }
     } else {
         for (int i = 0; i < 3; i++) {
-            if (tiles[x_tile] == 'G' || tiles[x_tile] == 'B') {
+            if (colors[0] == 2 || colors[0] == 4) {
                 break;
             }
-            temp = tiles[corner[2]];
-            tiles[corner[2]] = tiles[corner[1]];
-            tiles[corner[1]] = tiles[corner[0]];
-            tiles[corner[0]] = temp;
+            temp = colors[2];
+            colors[2] = colors[1];
+            colors[1] = colors[0];
+            colors[0] = temp;
             rotations++;
         }
     }
@@ -322,19 +330,22 @@ int calcRotations(int index, int corner[], char tiles[]) {
     return rotations;
 }
 
-int calcOrientation(int edge[], char tiles[]) {
+int calcOrientation(int index, unsigned char cubie)  {
+    unsigned char colors[3];
+    getCubieColors(cubie, colors);
+
     int x_tile = 54;
     int y_tile = 54;
     int z_tile = 54;
     for (int i = 0; i < 3; i++) {
-        if (tiles[edge[i]] == 'G' || tiles[edge[i]] == 'B') {
-            x_tile = edge[i];
+        if (colors[i] == 2 || colors[i] == 4) {
+            x_tile = cubieTiles[index][i];
             continue;
-        } else if (tiles[edge[i]] == 'R' || tiles[edge[i]] == 'O') {
-            y_tile = edge[i];
+        } else if (colors[i] == 1 || colors[i] == 5) {
+            y_tile = cubieTiles[index][i];
             continue;
-        } else if (tiles[edge[i]] == 'Y' || tiles[edge[i]] == 'W') {
-            z_tile = edge[i];
+        } else if (colors[i] == 3 || colors[i] == 6) {
+            z_tile = cubieTiles[index][i];
             continue;
         }
     }

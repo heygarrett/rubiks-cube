@@ -1,11 +1,12 @@
 void returnFalse();
 void returnTrue();
-void validate(FILE *input, unsigned char *inputCube);
+void generateCube(FILE *input, unsigned char *inputCube);
+void validate(unsigned char *inputCube);
 unsigned char tileColor(char t);
 unsigned char z2TileColor(unsigned char x, unsigned char y, unsigned char z);
 unsigned char z4TileColor(unsigned char other, unsigned char z);
 unsigned char setCubieColors(unsigned char x, unsigned char y, unsigned char z);
 void getCubieColors(unsigned char cubie, unsigned char *colors);
 unsigned char calcGoalValue(unsigned char cubie);
-int calcRotations(int index, int corner[], char tiles[]);
-int calcOrientation(int edge[], char tiles[]);
+int calcRotations(int index, unsigned char cubie);
+int calcOrientation(int index, unsigned char cubie);

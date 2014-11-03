@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "valid.h"
+#include "turns.h"
 
 int main(int argc, char *argv[]) {
 
@@ -20,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     // Generate valid cube representation
     unsigned char inputCube[20];
-    validate(input, inputCube);
+    generateCube(input, inputCube);
 
     return 0;
 }
