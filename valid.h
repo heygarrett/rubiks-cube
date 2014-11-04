@@ -1,3 +1,4 @@
+extern unsigned char goalState[20];
 void returnFalse();
 void returnTrue();
 void generateCube(FILE *input, unsigned char *inputCube);

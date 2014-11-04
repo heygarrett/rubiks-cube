@@ -6,11 +6,8 @@
 
 #define LEN(a) (sizeof(a)) / (sizeof(a[0]))
 
-// Globals
 // Used to determine color of Z-axis based on X-axis and/or Y-axis
 unsigned char adjacency[6][4] = {{2,3,4,6},{1,3,5,6},{1,2,4,5},{1,3,5,6},{2,3,4,6},{1,2,4,5}};
-// Solved cube
-unsigned char goalState[20] = {70,7,134,68,132,69,5,133,67,131,65,129,86,23,150,84,148,85,21,149};
 
 // Map of tiles to cubie
 int cubieTiles[20][3] = {

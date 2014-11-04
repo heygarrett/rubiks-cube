@@ -5,6 +5,8 @@
 #include "valid.h"
 #include "turns.h"
 
+unsigned char goalState[20] = {70,7,134,68,132,69,5,133,67,131,65,129,86,23,150,84,148,85,21,149};
+
 int main(int argc, char *argv[]) {
 
     // Check for a passed file
