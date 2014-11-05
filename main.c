@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "valid.h"
-#include "turns.h"
+#include "search.h"
 
 unsigned char goalState[20] = {70,7,134,68,132,69,5,133,67,131,65,129,86,23,150,84,148,85,21,149};
 
@@ -22,8 +22,15 @@ int main(int argc, char *argv[]) {
     }
 
     // Generate valid cube representation
-    unsigned char inputCube[20];
-    generateCube(input, inputCube);
+    // unsigned char inputCube[20];
+
+    struct Node root;
+    root.g = 0;
+
+    generateCube(input, root.cube);
+
+    char *path = ida_star(root);
+    printf("Path: %c\n", *path);
 
     return 0;
 }
