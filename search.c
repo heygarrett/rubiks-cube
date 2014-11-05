@@ -24,21 +24,22 @@ char search(struct Node node, char g, char bound, char *path) {
         return f;
     }
     if (is_goal(node)) {
-        return -1;
         path[0] = node.move[0];
         path[1] = node.move[1];
+        return -1;
     }
     char min = 20;
     struct Node children[18];
     int lenChildren = generateChildren(node, children);
     for (int i = 0; i < lenChildren; i++) {
         char t = search(children[i], g + 1, bound, path);
+        // printf("%c\n", t);
         // free(&children[i]);
         if (t == -1) {
-            return -1;
             memcpy(&path[2], &path[0], 2);
             path[0] = node.move[0];
             path[1] = node.move[0];
+            return -1;
         }
         if (t < min) {
             min = t;

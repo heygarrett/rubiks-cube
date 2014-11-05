@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     generateCube(input, root.cube);
 
     char *path = ida_star(root);
-    printf("Path: %c\n", *path);
+    printf("%c\n", *path);
 
     return 0;
 }
