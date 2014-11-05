@@ -21,16 +21,12 @@ int main(int argc, char *argv[]) {
         returnFalse();
     }
 
-    // Generate valid cube representation
-    // unsigned char inputCube[20];
-
     struct Node root;
     root.g = 0;
-
     generateCube(input, root.cube);
-
-    char *path = ida_star(root);
-    printf("%c\n", *path);
+    char path[40] = "\0";
+    ida_star(root, path);
+    printf("%s\n", path);
 
     return 0;
 }

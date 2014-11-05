@@ -44,12 +44,12 @@ void turnYellow(unsigned char *cube, int turns) {
         int temp = switchColors(cube[5], swap);
         cube[5] = switchColors(cube[17], swap);
         cube[17] = switchColors(cube[19], swap);
-        cube[19] = switchColors(cube[7], swap);;
+        cube[19] = switchColors(cube[7], swap);
         cube[7] = temp;
         temp = switchColors(cube[6], swap);
         cube[6] = switchColors(cube[10], swap);
         cube[10] = switchColors(cube[18], swap);
-        cube[18] = switchColors(cube[11], swap);;
+        cube[18] = switchColors(cube[11], swap);
         cube[11] = temp;
         --turns;
     }
@@ -66,7 +66,7 @@ void turnBlue(unsigned char *cube, int turns) {
         temp = switchColors(cube[4], swap);
         cube[4] = switchColors(cube[11], swap);
         cube[11] = switchColors(cube[16], swap);
-        cube[16] = switchColors(cube[9], swap);;
+        cube[16] = switchColors(cube[9], swap);
         cube[9] = temp;
         --turns;
     }

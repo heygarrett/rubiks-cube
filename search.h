@@ -4,8 +4,8 @@ struct Node {
     unsigned char cube[20];
 };
 
-char * ida_star(struct Node root);
+char * ida_star(struct Node root, char *path);
 char search(struct Node node, char g, char bound, char *path);
-char h(struct Node node);
+int h(struct Node node);
 int is_goal(struct Node node);
 int generateChildren(struct Node node, struct Node *children);
