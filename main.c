@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     root.g = 0;
     generateCube(input, root.cube);
     char path[40] = "\0";
-    ida_star(root, path);
+    ida_star(&root, path);
     printf("%s\n", path);
 
     return 0;
