@@ -5,6 +5,7 @@ struct list {
 
 struct state {
     unsigned char cube[20];
+    unsigned char last_face;
 };
 
 void bf_search(struct state root);

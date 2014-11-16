@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
     printf("%s\n", path); */
 
     struct state goal;
+    goal.last_face = 'N';
     memcpy(goal.cube, goal_state, sizeof(goal_state));
     bf_search(goal);
 

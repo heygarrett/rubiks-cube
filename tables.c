@@ -38,58 +38,76 @@ void bf_search(struct state root) {
 
 int create_children(struct state node, struct list *new_frontier, int node_number, unsigned char *hash_table) {
     int count = 0;
-    for (int i = 1; i <= 3; i++) {
-        struct state red_cube = node;
-        make_move(red_cube.cube, 'R', i);
-        if (hash(red_cube, hash_table)) {
-            count++;
-            new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
-            new_frontier->cubes[node_number + count - 1] = red_cube;
+    if (node.last_face != 'R') {
+        for (int i = 1; i <= 3; i++) {
+            struct state red_cube = node;
+            make_move(red_cube.cube, 'R', i);
+            red_cube.last_face = 'R';
+            if (hash(red_cube, hash_table)) {
+                count++;
+                new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
+                new_frontier->cubes[node_number + count - 1] = red_cube;
+            }
         }
     }
-    for (int i = 1; i <= 3; i++) {
-        struct state green_cube = node;
-        make_move(green_cube.cube, 'G', i);
-        if (hash(green_cube, hash_table)) {
-            count++;
-            new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
-            new_frontier->cubes[node_number + count - 1] = green_cube;
+    if (node.last_face != 'G') {
+        for (int i = 1; i <= 3; i++) {
+            struct state green_cube = node;
+            make_move(green_cube.cube, 'G', i);
+            green_cube.last_face = 'G';
+            if (hash(green_cube, hash_table)) {
+                count++;
+                new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
+                new_frontier->cubes[node_number + count - 1] = green_cube;
+            }
         }
     }
-    for (int i = 1; i <= 3; i++) {
-        struct state yellow_cube = node;
-        make_move(yellow_cube.cube, 'Y', i);
-        if (hash(yellow_cube, hash_table)) {
-            count++;
-            new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
-            new_frontier->cubes[node_number + count - 1] = yellow_cube;
+    if (node.last_face != 'Y') {
+        for (int i = 1; i <= 3; i++) {
+            struct state yellow_cube = node;
+            make_move(yellow_cube.cube, 'Y', i);
+            yellow_cube.last_face = 'Y';
+            if (hash(yellow_cube, hash_table)) {
+                count++;
+                new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
+                new_frontier->cubes[node_number + count - 1] = yellow_cube;
+            }
         }
     }
-    for (int i = 1; i <= 3; i++) {
-        struct state blue_cube = node;
-        make_move(blue_cube.cube, 'B', i);
-        if (hash(blue_cube, hash_table)) {
-            count++;
-            new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
-            new_frontier->cubes[node_number + count - 1] = blue_cube;
+    if (node.last_face != 'B') {
+        for (int i = 1; i <= 3; i++) {
+            struct state blue_cube = node;
+            make_move(blue_cube.cube, 'B', i);
+            blue_cube.last_face = 'B';
+            if (hash(blue_cube, hash_table)) {
+                count++;
+                new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
+                new_frontier->cubes[node_number + count - 1] = blue_cube;
+            }
         }
     }
-    for (int i = 1; i <= 3; i++) {
-        struct state orange_cube = node;
-        make_move(orange_cube.cube, 'O', i);
-        if (hash(orange_cube, hash_table)) {
-            count++;
-            new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
-            new_frontier->cubes[node_number + count - 1] = orange_cube;
+    if (node.last_face != 'O') {
+        for (int i = 1; i <= 3; i++) {
+            struct state orange_cube = node;
+            make_move(orange_cube.cube, 'O', i);
+            orange_cube.last_face = 'O';
+            if (hash(orange_cube, hash_table)) {
+                count++;
+                new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
+                new_frontier->cubes[node_number + count - 1] = orange_cube;
+            }
         }
     }
-    for (int i = 1; i <= 3; i++) {
-        struct state white_cube = node;
-        make_move(white_cube.cube, 'W', i);
-        if (hash(white_cube, hash_table)) {
-            count++;
-            new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
-            new_frontier->cubes[node_number + count - 1] = white_cube;
+    if (node.last_face != 'W') {
+        for (int i = 1; i <= 3; i++) {
+            struct state white_cube = node;
+            make_move(white_cube.cube, 'W', i);
+            white_cube.last_face = 'W';
+            if (hash(white_cube, hash_table)) {
+                count++;
+                new_frontier->cubes = realloc(new_frontier->cubes, (node_number + count) * sizeof(struct state));
+                new_frontier->cubes[node_number + count - 1] = white_cube;
+            }
         }
     }
 
