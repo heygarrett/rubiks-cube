@@ -54,7 +54,7 @@ int h(struct Node *node) {
 
 int is_goal(struct Node *node) {
     for (int i = 0; i < 20; i++) {
-        if (node->cube[i] != goalState[i]) {
+        if (node->cube[i] != goal_state[i]) {
             return 0;
         }
     }
@@ -64,42 +64,42 @@ int is_goal(struct Node *node) {
 int generateChildren(struct Node *node, struct Node *children) {
     for (int i = 1; i <= 3; i++) {
         struct Node redNode = *node;
-        makeMove(redNode.cube, 'R', i);
+        make_move(redNode.cube, 'R', i);
         redNode.move[0] = 'R';
         redNode.move[1] = '0' + i;
         children[i - 1] = redNode;
     }
     for (int i = 1; i <= 3; i++) {
         struct Node greenNode = *node;
-        makeMove(greenNode.cube, 'G', i);
+        make_move(greenNode.cube, 'G', i);
         greenNode.move[0] = 'G';
         greenNode.move[1] = '0' + i;
         children[i + 2] = greenNode;
     }
     for (int i = 1; i <= 3; i++) {
         struct Node yellowNode = *node;
-        makeMove(yellowNode.cube, 'Y', i);
+        make_move(yellowNode.cube, 'Y', i);
         yellowNode.move[0] = 'Y';
         yellowNode.move[1] = '0' + i;
         children[i + 5] = yellowNode;
     }
     for (int i = 1; i <= 3; i++) {
         struct Node blueNode = *node;
-        makeMove(blueNode.cube, 'B', i);
+        make_move(blueNode.cube, 'B', i);
         blueNode.move[0] = 'B';
         blueNode.move[1] = '0' + i;
         children[i + 8] = blueNode;
     }
     for (int i = 1; i <= 3; i++) {
         struct Node orangeNode = *node;
-        makeMove(orangeNode.cube, 'O', i);
+        make_move(orangeNode.cube, 'O', i);
         orangeNode.move[0] = 'O';
         orangeNode.move[1] = '0' + i;
         children[i + 11] = orangeNode;
     }
     for (int i = 1; i <= 3; i++) {
         struct Node whiteNode = *node;
-        makeMove(whiteNode.cube, 'W', i);
+        make_move(whiteNode.cube, 'W', i);
         whiteNode.move[0] = 'W';
         whiteNode.move[1] = '0' + i;
         children[i + 14] = whiteNode;
