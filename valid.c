@@ -55,19 +55,19 @@ void generate_cube(FILE *input, unsigned char *input_cube) {
 
     // Save the orientation of the cube from the file to a string
     int t;
-    int tilesCount = 0;
+    int tiles_count = 0;
     char tiles[55];
-    while ((t = fgetc(input)) != EOF && tilesCount < 54) {
+    while ((t = fgetc(input)) != EOF && tiles_count < 54) {
         if (t != '\n' && t != ' ') {
-            tiles[tilesCount] = t;
-            tilesCount++;
+            tiles[tiles_count] = t;
+            tiles_count++;
         }
     }
     tiles[54] = '\0';
     fclose(input);
 
     // False if there aren't 54 tiles
-    if (tilesCount != 54) {
+    if (tiles_count != 54) {
         return_false();
     }
     // False if there aren't 9 tiles of each color
