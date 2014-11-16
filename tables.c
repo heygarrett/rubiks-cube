@@ -6,6 +6,7 @@
 #include "valid.h"
 
 void bf_search(struct state root) {
+    int depth = 0;
     struct list frontier;
     frontier.size = 1;
     frontier.cubes = malloc(sizeof(struct state));
@@ -13,20 +14,21 @@ void bf_search(struct state root) {
     struct list new_frontier;
     int total;
     unsigned char *hash_table = malloc(sizeof(unsigned char) * 88179840);
-    for (int i = 0; i < LEN(hash_table); i++) {
-        hash_table[i] = 15;
+    for (unsigned long i = 0; i < 88179840; i++) {
+        hash_table[i] = 21;
     }
 
     for ( ; ; ) {
+        depth++;
         new_frontier.cubes = NULL;
         total = 0;
         for (int i = 0; i < frontier.size; i++) {
-            total += create_children(frontier.cubes[frontier.size - 1], &new_frontier, frontier.size + total, hash_table);
+            total += create_children(frontier.cubes[i], &new_frontier, total, hash_table);
         }
         new_frontier.size = total;
         free(frontier.cubes);
         frontier = new_frontier;
-        printf("%d\n", frontier.size);
+        printf("Depth %d: %d\n", depth, frontier.size);
         if (frontier.size == 0) {
             break;
         }
@@ -38,7 +40,7 @@ void bf_search(struct state root) {
 
 int create_children(struct state node, struct list *new_frontier, int node_number, unsigned char *hash_table) {
     int count = 0;
-    if (node.last_face != 'R') {
+    if (node.last_face != 'R' && node.last_face != 'O') {
         for (int i = 1; i <= 3; i++) {
             struct state red_cube = node;
             make_move(red_cube.cube, 'R', i);
@@ -50,7 +52,7 @@ int create_children(struct state node, struct list *new_frontier, int node_numbe
             }
         }
     }
-    if (node.last_face != 'G') {
+    if (node.last_face != 'G' && node.last_face != 'B') {
         for (int i = 1; i <= 3; i++) {
             struct state green_cube = node;
             make_move(green_cube.cube, 'G', i);
@@ -62,7 +64,7 @@ int create_children(struct state node, struct list *new_frontier, int node_numbe
             }
         }
     }
-    if (node.last_face != 'Y') {
+    if (node.last_face != 'Y' && node.last_face != 'W') {
         for (int i = 1; i <= 3; i++) {
             struct state yellow_cube = node;
             make_move(yellow_cube.cube, 'Y', i);
@@ -116,8 +118,8 @@ int create_children(struct state node, struct list *new_frontier, int node_numbe
 
 int hash(struct state node, unsigned char *hash_table) {
     unsigned char corners[8] = {0, 2, 5, 7, 12, 14, 17, 19};
-    unsigned char edges1[6] = {1, 3, 4, 6, 8, 9};
-    unsigned char edges2[6] = {10, 11, 13, 15, 16, 18};
+    // unsigned char edges1[6] = {1, 3, 4, 6, 8, 9};
+    // unsigned char edges2[6] = {10, 11, 13, 15, 16, 18};
 
     int corner_indices[8];
     for (int i = 0; i < 8; i++) {
@@ -140,16 +142,17 @@ int hash(struct state node, unsigned char *hash_table) {
         multi_base[multi_marker] = count;
         --multi_marker;
     }
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 7; i++) {
         multi_base[i] = calc_rotations(corners[i], node.cube[corners[i]]);
     }
 
     int index = ((((((((((((((multi_base[0])*3+multi_base[1])*3+multi_base[2])*3+multi_base[3])*3+multi_base[4])*3+multi_base[5])*3+multi_base[6])*2+multi_base[7])*3+multi_base[8])*4+multi_base[9])*5+multi_base[10])*6+multi_base[11])*7+multi_base[12])*8+multi_base[13]);
 
-    if (hash_table[index] != 15) {
+
+    if (hash_table[index] != 21) {
+        return 0;
+    } else {
         hash_table[index] = 0;
         return 1;
-    } else {
-        return 0;
     }
 }

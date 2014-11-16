@@ -299,7 +299,7 @@ int calc_rotations(int index, unsigned char cubie) {
     int rotations = 0;
     char temp;
     if (index == 0 || index == 7 || index == 14 || index == 17) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             if (colors[0] == 2 || colors[0] == 4) {
                 break;
             }
@@ -310,7 +310,7 @@ int calc_rotations(int index, unsigned char cubie) {
             rotations++;
         }
     } else {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             if (colors[0] == 2 || colors[0] == 4) {
                 break;
             }

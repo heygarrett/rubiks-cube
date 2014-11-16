@@ -10,7 +10,8 @@ unsigned char goal_state[20] = {70, 7, 134, 68, 132, 69, 5, 133, 67, 131, 65, 12
 
 int main(int argc, char *argv[]) {
 
-    /* // Check for a passed file
+    /*
+    // Check for a passed file
     if (argc != 2) {
         return_false();
     } 
@@ -27,7 +28,8 @@ int main(int argc, char *argv[]) {
     generate_cube(input, root.cube);
     char path[40] = "\0";
     ida_star(&root, path);
-    printf("%s\n", path); */
+    printf("%s\n", path);
+    */
 
     struct state goal;
     goal.last_face = 'N';
