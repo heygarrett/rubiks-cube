@@ -17,12 +17,12 @@ void bf_search(struct state root) {
     for (unsigned long i = 0; i < 88179840; i++) {
         hash_corners[i] = 21;
     }
-    unsigned char *hash_edges1 = malloc(sizeof(unsigned char) * 23040);
-    for (unsigned long i = 0; i < 23040; i++) {
+    unsigned char *hash_edges1 = malloc(sizeof(unsigned char) * 46080);
+    for (unsigned long i = 0; i < 46080; i++) {
         hash_edges1[i] = 21;
     }
-    unsigned char *hash_edges2 = malloc(sizeof(unsigned char) * 23040);
-    for (unsigned long i = 0; i < 23040; i++) {
+    unsigned char *hash_edges2 = malloc(sizeof(unsigned char) * 46080);
+    for (unsigned long i = 0; i < 46080; i++) {
         hash_edges2[i] = 21;
     }
     unsigned char *hash_table[3] = {hash_corners, hash_edges1, hash_edges2};
@@ -44,9 +44,6 @@ void bf_search(struct state root) {
     }
     free(frontier.cubes);
     free(new_frontier.cubes);
-    free(hash_table[0]);
-    free(hash_table[1]);
-    free(hash_table[2]);
 
     unsigned char *compressed_corners = malloc(sizeof(unsigned char) * 44089920);
     for (int i = 0; i < 88179840; i++) {
@@ -60,10 +57,11 @@ void bf_search(struct state root) {
     }
     FILE *corner_file = fopen("corners", "wb");
     fwrite(compressed_corners, 1, 44089920, corner_file);
+    free(hash_table[0]);
     free(compressed_corners);
 
-    unsigned char *compressed_edges1 = malloc(sizeof(unsigned char) * 11520);
-    for (int i = 0; i < 23040; i++) {
+    unsigned char *compressed_edges1 = malloc(sizeof(unsigned char) * 23040);
+    for (int i = 0; i < 46080; i++) {
         if (i % 2 == 0) {
             compressed_edges1[i/2] = hash_table[1][i] >> 4;
             compressed_edges1[i/2] = compressed_edges1[i/2] << 4;
@@ -73,11 +71,12 @@ void bf_search(struct state root) {
         }
     }
     FILE *edges1_file = fopen("edges1", "wb");
-    fwrite(compressed_corners, 1, 11520, edges1_file);
+    fwrite(compressed_corners, 1, 23040, edges1_file);
+    free(hash_table[1]);
     free(compressed_edges1);
 
-    unsigned char *compressed_edges2 = malloc(sizeof(unsigned char) * 11520);
-    for (int i = 0; i < 23040; i++) {
+    unsigned char *compressed_edges2 = malloc(sizeof(unsigned char) * 23040);
+    for (int i = 0; i < 46080; i++) {
         if (i % 2 == 0) {
             compressed_edges2[i/2] = hash_table[2][i] >> 4;
             compressed_edges2[i/2] = compressed_edges2[i/2] << 4;
@@ -87,8 +86,10 @@ void bf_search(struct state root) {
         }
     }
     FILE *edges2_file = fopen("edges2", "wb");
-    fwrite(compressed_corners, 1, 11520, edges2_file);
+    fwrite(compressed_corners, 1, 23040, edges2_file);
+    free(hash_table[2]);
     free(compressed_edges2);
+
 }
 
 int create_children(struct state node, struct list *new_frontier, int node_number, int depth, unsigned char **hash_table) {
@@ -250,7 +251,7 @@ void enumerate(unsigned char *cube, int *indices) {
 
     indices[0] = ((((((((((((((multi_base[0])*3+multi_base[1])*3+multi_base[2])*3+multi_base[3])*3+multi_base[4])*3+multi_base[5])*3+multi_base[6])*2+multi_base[7])*3+multi_base[8])*4+multi_base[9])*5+multi_base[10])*6+multi_base[11])*7+multi_base[12])*8+multi_base[13]);
 
-    multi_marker = 9;
+    multi_marker = 10;
     for (int i = 0; i < 6; i++) {
         int count = 0;
         for (int j = i; j < 6; j++) {
@@ -262,13 +263,13 @@ void enumerate(unsigned char *cube, int *indices) {
         --multi_marker;
     }
     int edges1[6] = {1, 3, 4, 6, 8, 9};
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         multi_base[i] = calc_orientation(edges1[i], cube[edges1[i]]);
     }
 
-    indices[1] = ((((((((((multi_base[0])*2+multi_base[1])*2+multi_base[2])*2+multi_base[3])*2+multi_base[4])*2+multi_base[5])*3+multi_base[6])*4+multi_base[7])*5+multi_base[8])*6+multi_base[9]);
+    indices[1] = (((((((((((multi_base[0])*2+multi_base[1])*2+multi_base[2])*2+multi_base[3])*2+multi_base[4])*2+multi_base[5])*2+multi_base[6])*3+multi_base[7])*4+multi_base[8])*5+multi_base[9])*6+multi_base[10]);
 
-    multi_marker = 9;
+    multi_marker = 10;
     for (int i = 0; i < 6; i++) {
         int count = 0;
         for (int j = i; j < 6; j++) {
@@ -280,9 +281,8 @@ void enumerate(unsigned char *cube, int *indices) {
         --multi_marker;
     }
     int edges2[6] = {10, 11, 13, 15, 16, 18};
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         multi_base[i] = calc_orientation(edges2[i], cube[edges2[i]]);
     }
-
-    indices[2] = ((((((((((multi_base[0])*2+multi_base[1])*2+multi_base[2])*2+multi_base[3])*2+multi_base[4])*2+multi_base[5])*3+multi_base[6])*4+multi_base[7])*5+multi_base[8])*6+multi_base[9]);
+    indices[2] = (((((((((((multi_base[0])*2+multi_base[1])*2+multi_base[2])*2+multi_base[3])*2+multi_base[4])*2+multi_base[5])*2+multi_base[6])*3+multi_base[7])*4+multi_base[8])*5+multi_base[9])*6+multi_base[10]);
 }
