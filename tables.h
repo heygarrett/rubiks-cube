@@ -9,5 +9,6 @@ struct state {
 };
 
 void bf_search(struct state root);
-int create_children(struct state node, struct list *new_frontier, int nodeNumber, unsigned char *hash_table);
-int hash(struct state node, unsigned char *hash_table);
+int create_children(struct state node, struct list *new_frontier, int nodeNumber, int depth, unsigned char **hash_table);
+int hash(struct state node, int depth, unsigned char **hash_table);
+void enumerate(unsigned char *cube, int *indices);
