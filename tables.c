@@ -47,6 +47,48 @@ void bf_search(struct state root) {
     free(hash_table[0]);
     free(hash_table[1]);
     free(hash_table[2]);
+
+    unsigned char *compressed_corners = malloc(sizeof(unsigned char) * 44089920);
+    for (int i = 0; i < 88179840; i++) {
+        if (i % 2 == 0) {
+            compressed_corners[i/2] = hash_table[0][i] >> 4;
+            compressed_corners[i/2] = compressed_corners[i/2] << 4;
+        } else {
+            hash_table[0][i] = hash_table[0][i] << 4;
+            compressed_corners[i/2] += (hash_table[0][i] >> 4);
+        }
+    }
+    FILE *corner_file = fopen("corners", "wb");
+    fwrite(compressed_corners, 1, 44089920, corner_file);
+    free(compressed_corners);
+
+    unsigned char *compressed_edges1 = malloc(sizeof(unsigned char) * 11520);
+    for (int i = 0; i < 23040; i++) {
+        if (i % 2 == 0) {
+            compressed_edges1[i/2] = hash_table[1][i] >> 4;
+            compressed_edges1[i/2] = compressed_edges1[i/2] << 4;
+        } else {
+            hash_table[1][i] = hash_table[1][i] << 4;
+            compressed_edges1[i/2] += (hash_table[1][i] >> 4);
+        }
+    }
+    FILE *edges1_file = fopen("edges1", "wb");
+    fwrite(compressed_corners, 1, 11520, edges1_file);
+    free(compressed_edges1);
+
+    unsigned char *compressed_edges2 = malloc(sizeof(unsigned char) * 11520);
+    for (int i = 0; i < 23040; i++) {
+        if (i % 2 == 0) {
+            compressed_edges2[i/2] = hash_table[2][i] >> 4;
+            compressed_edges2[i/2] = compressed_edges2[i/2] << 4;
+        } else {
+            hash_table[2][i] = hash_table[2][i] << 4;
+            compressed_edges2[i/2] += (hash_table[2][i] >> 4);
+        }
+    }
+    FILE *edges2_file = fopen("edges2", "wb");
+    fwrite(compressed_corners, 1, 11520, edges2_file);
+    free(compressed_edges2);
 }
 
 int create_children(struct state node, struct list *new_frontier, int node_number, int depth, unsigned char **hash_table) {
