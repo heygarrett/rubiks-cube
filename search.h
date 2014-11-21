@@ -5,7 +5,7 @@ struct Node {
 };
 
 char * ida_star(struct Node *root, char *path);
-char search(struct Node *node, char g, char bound, char *path);
+int search(struct Node *node, int g, int bound, char *path);
 int h(struct Node *node);
 int is_goal(struct Node *node);
-int generateChildren(struct Node *node, struct Node *children);
+int generate_children(struct Node *node, struct Node *children);

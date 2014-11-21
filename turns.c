@@ -4,7 +4,7 @@
 #include "turns.h"
 #include "valid.h"
 
-void makeMove(unsigned char *cube, char face, int turns) {
+void make_move(unsigned char *cube, char face, int turns) {
 
     int redCubies[8] = {0, 5, 7, 2, 1, 3, 6, 4};
     int redSwap[2] = {0, 2};
@@ -59,9 +59,9 @@ void makeMove(unsigned char *cube, char face, int turns) {
 
 unsigned char switchColors(unsigned char cubie, int *swap) {
     unsigned char colors[3];
-    getCubieColors(cubie, colors);
+    get_cubie_colors(cubie, colors);
     unsigned char temp = colors[swap[0]];
     colors[swap[0]] = colors[swap[1]];
     colors[swap[1]] = temp;
-    return setCubieColors(colors[0], colors[1], colors[2]);
+    return set_cubie_colors(colors[0], colors[1], colors[2]);
 }

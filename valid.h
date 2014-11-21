@@ -1,13 +1,15 @@
-extern unsigned char goalState[20];
-void returnFalse();
+#define LEN(a) (sizeof(a)) / (sizeof(a[0]))
+
+extern unsigned char goal_state[20];
+void return_false();
 void returnTrue();
-void generateCube(FILE *input, unsigned char *inputCube);
-void validate(unsigned char *inputCube);
-unsigned char tileColor(char t);
-unsigned char z2TileColor(unsigned char x, unsigned char y, unsigned char z);
-unsigned char z4TileColor(unsigned char other, unsigned char z);
-unsigned char setCubieColors(unsigned char x, unsigned char y, unsigned char z);
-void getCubieColors(unsigned char cubie, unsigned char *colors);
-unsigned char calcGoalValue(unsigned char cubie);
-int calcRotations(int index, unsigned char cubie);
-int calcOrientation(int index, unsigned char cubie);
+void generate_cube(FILE *input, unsigned char *input_cube);
+void validate(unsigned char *input_cube);
+unsigned char tile_color(char t);
+unsigned char z2_tile_color(unsigned char x, unsigned char y, unsigned char z);
+unsigned char z4_tile_color(unsigned char other, unsigned char z);
+unsigned char set_cubie_colors(unsigned char x, unsigned char y, unsigned char z);
+void get_cubie_colors(unsigned char cubie, unsigned char *colors);
+unsigned char calc_goal_value(unsigned char cubie);
+int calc_rotations(int index, unsigned char cubie);
+int calc_orientation(int index, unsigned char cubie);
